@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.julyerr.interviews.sql.mybatis.mapper.UserMapperOrders">
+
+    <select id="findOrdersUser" resultType="ordersCustom">
+        SELECT
+        orders.*,
+        user.`username`,
+        user.`sex`,
+        user.`address`
+        FROM
+        orders,
+        user
+        WHERE orders.`user_id` = user.`id`
+    </select>
+
+    <select id="findOrdersUserResultMap" resultMap="OrdersUserResultMap">
+        SELECT
+        orders.*,
+        user.`username`,
+        user.`sex`,
+        user.`address`
+        FROM
+        orders,
+        user
+        WHERE orders.`user_id` = user.`id`
+    </select>
+
+    <resultMap type="orders" id="OrdersUserResultMap">
+        <!-- 配置映射订单信息 -->
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="number" property="number"/>
+        <result column="createtime" property="createtime"/>
+        <result column="note" property="note"/>
+
+        <!-- 配置映射的关联的用户信息 -->
+        <!-- association用于映射关联查询单个对象的信息
+            property：要将关联查询的用户信息映射到Orders中的哪个属性
+            javaType：该属性的类型
+         -->
+        <association property="user" javaType="user">
+            <id column="user_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="sex" property="sex"/>
+            <result column="address" property="address"/>
+        </association>
+    </resultMap>
+
+    <select id="findOrdersAndOrderDetailResultMap" resultMap="OrdersAndOrderDetailResultMap">
+        SELECT
+        orders.*,
+        user.`username`,
+        user.`sex`,
+        user.`address`,
+        orderdetail.`id` orderdetail_id,
+        orderdetail.`items_id`,
+        orderdetail.`items_num`,
+        orderdetail.`orders_id`
+        FROM
+        orders,
+        user,
+        orderdetail
+        WHERE orders.`user_id`=user.`id` AND orders.`id` = orderdetail.`orders_id`
+    </select>
+
+    <resultMap type="orders" id="OrdersAndOrderDetailResultMap" extends="OrdersUserResultMap">
+        <!-- 配置关联的订单明细信息 -->
+        <collection property="orderdetails" ofType="orderdetail">
+            <id column="orderdetail_id" property="id"/>
+            <result column="items_id" property="itemsId"/>
+            <result column="items_num" property="itemsNum"/>
+            <result column="orders_id" property="ordersId"/>
+        </collection>
+    </resultMap>
+
+    <select id="findUserAndItemsResultMap" resultMap="UserAndItemsResultMap">
+        SELECT
+        orders.*,
+        user.`username`,
+        user.`sex`,
+        user.`address`,
+        orderdetail.`id` orderdetail_id,
+        orderdetail.`items_id`,
+        orderdetail.`items_num`,
+        orderdetail.`orders_id`,
+        items.`name` items_name,
+        items.`detail` items_detail,
+        items.`price` items_price
+        FROM
+        orders,
+        user,
+        orderdetail,
+        items
+        WHERE orders.`user_id`=user.`id` AND orders.`id` = orderdetail.`orders_id` AND orderdetail.`items_id`=items.`id`
+    </select>
+
+    <resultMap type="user" id="UserAndItemsResultMap">
+        <!-- 用户信息 -->
+        <id column="user_id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="address" property="address"/>
+        <!-- 订单信息 -->
+        <!-- 一个用户对应多个订单，使用collection -->
+        <collection property="ordersList" ofType="orders">
+            <id column="id" property="id"/>
+            <result column="user_id" property="userId"/>
+            <result column="number" property="number"/>
+            <result column="createtime" property="createtime"/>
+            <result column="note" property="note"/>
+            <!-- 订单明细信息 -->
+            <!-- 一个订单包括多个明细，使用collection -->
+            <collection property="orderdetails" ofType="orderdetail">
+                <id column="orderdetail_id" property="id"/>
+                <result column="items_id" property="itemsId"/>
+                <result column="items_num" property="itemsNum"/>
+                <result column="orders_id" property="ordersId"/>
+                <!-- 商品信息 -->
+                <!-- 一个明细对应一个商品信息，使用association -->
+                <association property="items" javaType="items">
+                    <id column="items_id" property="id"/>
+                    <result column="items_name" property="name"/>
+                    <result column="items_detail" property="detail"/>
+                    <result column="items_price" property="price"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+
+
+</mapper>
