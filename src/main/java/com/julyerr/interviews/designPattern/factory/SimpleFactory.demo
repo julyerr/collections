@@ -1,0 +1,39 @@
+// 1.产品类单体系,有接口/抽象类————————————————————————————
+public interface class 产品{
+    //接口方法接口...
+}
+
+public class 产品A implements 产品{
+    public 产品A() {
+        ...
+    }
+    //接口方法实现...
+}
+public class 产品B implements 产品{
+    public 产品B(){
+        ...
+    }
+    //接口方法实现...
+}
+
+// 2.工厂类无接口/抽象类————————————————————————————
+public class 工厂{
+    public 产品 get产品(int type) {
+        switch(type) {
+            case 0:
+                return new 产品A();
+            case 1:
+                return new 产品B();
+        }
+        return null;
+    }
+}
+
+// 3.客户类——————————————————————————————————————————
+public class 客户{
+    public static void main(String[] args) {
+        工厂 厂 = new 工厂();
+        产品 品A = 厂.get产品(0);
+        产品 品B = 厂.get产品(1);
+    }
+}
