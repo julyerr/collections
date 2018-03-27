@@ -4,6 +4,7 @@ import com.julyerr.interviews.sql.mybatis.po.User;
 import com.julyerr.interviews.sql.mybatis.po.UserQueryVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserMapper {
     //用户信息综合查询
@@ -21,4 +22,9 @@ public interface UserMapper {
     public void deleteUser(int id) throws Exception;
     //更新用户信息
     public void updateUser(User user) throws Exception;
+
+//    逻辑分页
+    List<User> findUsersLogic();
+//    物理分页
+    List<User> findUsers(Map<String,Integer> stringIntegerMap);
 }

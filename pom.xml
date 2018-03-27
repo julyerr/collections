@@ -38,6 +38,13 @@
             <version>3.3.0</version>
         </dependency>
 
+        <!--分页插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
         <!--日志信息记录-->
         <dependency>
             <groupId>log4j</groupId>

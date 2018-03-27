@@ -76,4 +76,16 @@
 
     <!--在该mapper之下启用二级缓存-->
     <cache/>
+
+
+    <!--逻辑分页-->
+    <select id="findUsersLogic" resultType="user">
+        SELECT * FROM user
+    </select>
+
+    <!--物理分页-->
+    <select id="findUsers" parameterType="Map" resultType="user">
+        select *
+        from user LIMIT #{start},#{end};
+    </select>
 </mapper>

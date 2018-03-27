@@ -1,14 +1,13 @@
 package com.julyerr.interviews.sql.mybatis;
 
+import com.github.pagehelper.PageHelper;
 import com.julyerr.interviews.sql.mybatis.dao.UserDao;
 import com.julyerr.interviews.sql.mybatis.dao.UserDaoImpl;
 import com.julyerr.interviews.sql.mybatis.mapper.UserMapper;
 import com.julyerr.interviews.sql.mybatis.mapper.UserMapperOrders;
-import com.julyerr.interviews.sql.mybatis.po.Orders;
-import com.julyerr.interviews.sql.mybatis.po.OrdersCustom;
-import com.julyerr.interviews.sql.mybatis.po.User;
-import com.julyerr.interviews.sql.mybatis.po.UserQueryVo;
+import com.julyerr.interviews.sql.mybatis.po.*;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -17,7 +16,9 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MybatisDemo1Test {
     private SqlSessionFactory sqlSessionFactory;
@@ -33,7 +34,8 @@ public class MybatisDemo1Test {
         //创建会话工厂SqlSessionFactory,要传入mybaits的配置文件的流
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
     }
-//基于dao进行开发
+
+    //基于dao进行开发
     @Test
 //    dao接口查询
     public void testFindUserById() throws Exception {
@@ -43,8 +45,7 @@ public class MybatisDemo1Test {
     }
 
 
-
-//基于mapper进行开发
+    //基于mapper进行开发
     @Test
 //    使用mapper.class 进行查询
     public void testFindUserList() throws Exception {
@@ -107,5 +108,37 @@ public class MybatisDemo1Test {
         UserMapperOrders userMapperOrders = sqlSession.getMapper(UserMapperOrders.class);
         List<User> list = userMapperOrders.findUserAndItemsResultMap();
         System.out.println(list);
+    }
+
+    @Test
+    public void testSelectLogic() {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<User> users = session.selectList("com.julyerr.interviews.sql.mybatis.mapper.UserMapper.findUsersLogic", new Object(),
+                new RowBounds(1,5));
+
+        System.out.println(users);
+    }
+
+
+
+    @Test
+    public void testSelectSqlLayer(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Map<String,Integer> map = new HashMap<>();
+        map.put("start",1);
+        map.put("end",5);
+
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        List<User> users = userMapper.findUsers(map);
+        System.out.println(users);
+    }
+
+    @Test
+    public void testSelectPlugin() {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<User> users = session.selectList("com.julyerr.interviews.sql.mybatis.mapper.UserMapper.findUsersLogic", new Object(),
+                new RowBounds(1,5));
+//        PageHelper.startPage(1,5);
+        System.out.println(new PageBean<User>(users).getList());
     }
 }
