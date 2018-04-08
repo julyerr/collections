@@ -19,11 +19,10 @@ public class AccessPrivate {
         AccessPrivate accessPrivate = new AccessPrivate();
         Class<?> classType = accessPrivate.getClass();
 
-//
+//        访问私有方法
         Method method = classType.getDeclaredMethod("setName", String.class);
         method.setAccessible(true);
 
-//        访问私有方法
         Object object = method.invoke(accessPrivate, "julyerr1");
         System.out.println((String) object);
 
@@ -36,4 +35,6 @@ public class AccessPrivate {
         method = classType.getDeclaredMethod("getName");
         System.out.println((String) method.invoke(accessPrivate));
     }
+
+
 }
