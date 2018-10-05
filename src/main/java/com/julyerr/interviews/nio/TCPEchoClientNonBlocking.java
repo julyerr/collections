@@ -41,7 +41,6 @@ public class TCPEchoClientNonBlocking {
             System.out.println(".");
         }
         System.out.println("Received: " + new String(readBuf.array(), 0, totalBytesRecvd));
-        ;
 //        关闭连接
         clntChan.close();
     }

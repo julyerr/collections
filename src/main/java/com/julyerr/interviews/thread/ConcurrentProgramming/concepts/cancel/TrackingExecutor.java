@@ -1,4 +1,4 @@
-package com.julyerr.interviews.thread.ConcurrentProgramming;
+package com.julyerr.interviews.thread.ConcurrentProgramming.concepts.cancel;
 
 import java.util.*;
 import java.util.concurrent.AbstractExecutorService;
@@ -6,10 +6,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TrackingExecutor extends AbstractExecutorService {
-    public TrackingExecutor(ExecutorService executorService) {
-        exec = executorService;
-    }
-
     @Override
     public void shutdown() {
 
@@ -37,13 +33,18 @@ public class TrackingExecutor extends AbstractExecutorService {
 
 
     private final ExecutorService exec;
-    private final Set<Runnable> tasksCancelledAtShudown = Collections.synchronizedSet(new HashSet<Runnable>());
 
-    public List<Runnable> getCancelledTasks(){
-        if(!exec.isTerminated()){
+    private final Set<Runnable> tasksCancelledAtShutdown = Collections.synchronizedSet(new HashSet<Runnable>());
+
+    public TrackingExecutor(ExecutorService executorService) {
+        exec = executorService;
+    }
+
+    public List<Runnable> getCancelledTasks() {
+        if (!exec.isTerminated()) {
             throw new IllegalStateException();
         }
-        return new ArrayList<>(tasksCancelledAtShudown);
+        return new ArrayList<>(tasksCancelledAtShutdown);
     }
 
     @Override
@@ -54,8 +55,8 @@ public class TrackingExecutor extends AbstractExecutorService {
                 try {
                     command.run();
                 } finally {
-                    if(isShutdown() && Thread.currentThread().isInterrupted()){
-                        tasksCancelledAtShudown.add(command);
+                    if (isShutdown() && Thread.currentThread().isInterrupted()) {
+                        tasksCancelledAtShutdown.add(command);
                     }
                 }
             }

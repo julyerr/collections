@@ -1,7 +1,7 @@
 package com.julyerr.interviews.thread.ProducerComsumer;
 
 public class WaitNotify {
-    private Integer count = 0;
+    private volatile Integer count = 0;
     private final Integer FULL = 10;
     private String LOCK = "lock";
 

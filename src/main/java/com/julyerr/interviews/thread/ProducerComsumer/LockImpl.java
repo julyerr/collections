@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class LockImpl {
-    private Integer count = 0;
+    private volatile Integer count = 0;
     private final Integer FULL = 10;
     final Lock lock = new ReentrantLock();
     final Condition notFull = lock.newCondition();

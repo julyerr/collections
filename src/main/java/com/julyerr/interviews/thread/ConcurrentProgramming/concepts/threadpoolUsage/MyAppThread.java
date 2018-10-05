@@ -1,4 +1,52 @@
 package com.julyerr.interviews.thread.ConcurrentProgramming.concepts.threadpoolUsage;
 
-public class MyAppThread {
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+//自定义Thread类
+public class MyAppThread extends Thread{
+    public static final String DEFAULT_NAME = "MyAppThread";
+    private static volatile boolean debugLifyCycle  = false;
+    private static final AtomicInteger created = new AtomicInteger();
+    private static final AtomicInteger alive = new AtomicInteger();
+    private static final Logger log = Logger.getAnonymousLogger();
+
+    public MyAppThread(Runnable target) {
+        this(target,DEFAULT_NAME);
+    }
+
+    public MyAppThread(Runnable target, String name) {
+        super(target,name+"-"+created.incrementAndGet());
+        setUncaughtExceptionHandler(
+                new Thread.UncaughtExceptionHandler(){
+                    @Override
+                    public void uncaughtException(Thread t, Throwable e) {
+                        log.log(Level.SEVERE,"UNCAUGHT in thread "+t.getName(),e);
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void run() {
+        boolean debug = debugLifyCycle;
+        if(debug){
+            log.log(Level.FINE,"Created "+getName());
+        }
+        try {
+            alive.incrementAndGet();
+            super.run();
+        } finally {
+            alive.decrementAndGet();
+            if(debug){
+                log.log(Level.FINE,"Exiting "+getName());
+            }
+        }
+    }
+
+    public static int getThreadsCreated(){return created.get();}
+    public static int getThreadsAlive(){return alive.get();}
+    public static boolean getDebug(){return debugLifyCycle;}
+    public static void setDebugLifyCycle(boolean debug){debugLifyCycle=debug;}
 }

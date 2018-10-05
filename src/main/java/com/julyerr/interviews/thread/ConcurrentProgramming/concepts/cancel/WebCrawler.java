@@ -1,4 +1,4 @@
-package com.julyerr.interviews.thread.ConcurrentProgramming;
+package com.julyerr.interviews.thread.ConcurrentProgramming.concepts.cancel;
 
 import java.net.URL;
 import java.util.HashSet;

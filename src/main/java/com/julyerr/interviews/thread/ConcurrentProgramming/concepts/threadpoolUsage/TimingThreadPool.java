@@ -1,4 +1,4 @@
-package com.julyerr.interviews.thread.ConcurrentProgramming;
+package com.julyerr.interviews.thread.ConcurrentProgramming.concepts.threadpoolUsage;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -8,7 +8,8 @@ import java.util.logging.Logger;
 
 public class TimingThreadPool extends ThreadPoolExecutor {
 
-    public TimingThreadPool(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+    public TimingThreadPool(int corePoolSize, int maximumPoolSize, long keepAliveTime,
+                            TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
